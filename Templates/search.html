@@ -1,0 +1,145 @@
+<head>
+	<title>Bad_Day</title>
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js"></script>
+</head>
+<body>
+<!-- container div -->
+<div class = 'background'>
+	<div class = 'container'>
+
+		<!-- header -->
+		<div class = "page-header">
+			<div class = "row">
+				<div class = "col-md-3" >
+					<div class = 'logo'><a href="/">Bad_Day</a></div>
+				</div>
+				<div class = "right-head" class = "col-md-9">
+			{% if session['name'] %}	
+					<!-- Logout -->
+					<form action = "/logout">
+						Welcome, {{session['name']}}!
+						<button type = "submit">Logout</button>
+					</form>
+				{% else %}
+			<!-- Login/Register -->
+				<form action = "/login" method = "post">
+					<input placeholder = "E-mail" class = "input" name = 'email' type = 'text'>
+					<input placeholder = "Password" class = "input" name = 'password' type = 'password'>
+					<input type = 'submit' value = 'Log In'>
+				</form>
+				<p>Not a member yet? Join us <a href="/registration">here!</a></p>		
+			{% endif %}		
+				</div>
+			</div>
+			<!-- Nav Bar  -->
+			<div>
+				<nav class = "navbar navbar-default">
+					<div class = "container-fluid">
+						<div class = "navbar-header">
+							<ul class = "nav navbar-nav">
+								<li><a href="/">Home</a></li>
+								<li><a href="/view">Today's Vents</a></li>
+								<li><a href="/show_users">User List</a></li>
+								<li><a href="/search">Search Vents</a></li>
+								<li><a href="/about">About</a></li>
+							</ul>
+						</div>
+					</div>
+			</div>
+			<!-- End of Nav Bar -->
+		<!-- End of header -->
+		</div>
+
+		<!-- black text -->
+		<div class = 'blackify'>
+		<!-- Left side column -->
+		<div class = "col-md-6">
+			<div class = "message-view">
+				<!-- Displays error message if voting or posting fails -->
+				{% with messages = get_flashed_messages() %}
+					{% if messages %}
+						{% for message in messages %}
+							<p>{{message}}</p>
+						{% endfor %}
+					{% endif %}
+				{% endwith %}
+			</div>
+		<!-- Search Form, Enter Parameters-->
+		<h3>Search For Vents</h3>
+		<form action = "/search_params" method = "post">
+			<div class = "form-group">
+				User: 
+				<select name = "user">
+					<option></option>
+					{% for item in session['possible_users'] %}
+						<option>{{item['user_name']}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class = "form-group">
+				Date: 
+				<select name = "date">
+					<option></option>
+					{% for item in session['dates'] %}
+						<option> {{item['created_at'].strftime('%Y-%m-%d')}} </option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class = "form-group">
+				Keywords: <input type = 'text' name = 'keyword'>
+			</div>
+			<div class = "form-group">
+				<input type = "submit" value = "Search">
+			</div>					
+		</form>
+		<h3>Search For Past Winners</h3>
+		<form method = "post" action = "/search_winners">
+			Date: 
+			<select name = "date">
+				<div>
+					<option></option>
+					{% for item in session['winner-dates']%}
+						<option> {{item.strftime('%Y-%m-%d')}} </option>
+					{% endfor %}
+				</div>
+			</select>
+			<input type = "submit" value = "Search">
+		</form>
+		<!-- Ends left side columns  -->
+		</div>
+		<!-- Right side columns -->
+		<div class = "col-md-6">
+			{% if session['search'] != "Please enter a search parameter." and session['search'] != "fail" %}
+				{% for item in session['search'] %}
+					<p>{{item['story']}}</p>
+					<p><a href="/profile/{{item['user_name']}}">{{item['user_name']}}</a> | {{item['created_at'].strftime('%Y-%m-%d')}}</p>
+					<p>Better Than: {{item['thumbs_up']}} | Worse Than: {{item['thumbs_down']}}</p>
+					<hr>
+				{% endfor %}
+			{% elif session['search'] == "Please enter a search parameter." %}
+				<h3>{{ session['search'] }}</h3>
+			{% elif session['search'] == "fail" %}
+				<h3>Sorry, that search didn't return any results.</h3>
+			{% else %}
+				<h3>Your searches will show up here!</h3>
+ 			{% endif %}
+
+			<!-- Ends right side column -->
+		</div>
+	<!-- ends black text transformation -->
+	</div>
+	<!-- container -->
+	</div>
+<!-- background -->
+</div>
+</body>
+</html>

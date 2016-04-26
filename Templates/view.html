@@ -1,0 +1,148 @@
+<head>
+	<title>Bad_Day</title>
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js"></script>
+</head>
+<body>
+<!-- container div -->
+<div class = 'background'>
+	<div class = 'container'>
+
+		<!-- header -->
+		<div class = "page-header">
+			<div class = "row">
+				<div class = "col-md-3" >
+					<div class = 'logo'><a href="/">Bad_Day</a></div>
+				</div>
+				<div class = "right-head" class = "col-md-9">
+			{% if session['name'] %}	
+					<!-- Logout -->
+					<form action = "/logout">
+						Welcome, {{session['name']}}!
+						<button type = "submit">Logout</button>
+					</form>
+				{% else %}
+			<!-- Login/Register -->
+				<form action = "/login" method = "post">
+					<input placeholder = "E-mail" class = "input" name = 'email' type = 'text'>
+					<input placeholder = "Password" class = "input" name = 'password' type = 'password'>
+					<input type = 'submit' value = 'Log In'>
+				</form>
+				<p>Not a member yet? Join us <a href="/registration">here!</a></p>		
+			{% endif %}		
+				</div>
+			</div>
+			<!-- Nav Bar  -->
+			<div>
+				<nav class = "navbar navbar-default">
+					<div class = "container-fluid">
+						<div class = "navbar-header">
+							<ul class = "nav navbar-nav">
+								<li><a href="/">Home</a></li>
+								<li><a href="/view">Today's Vents</a></li>
+								<li><a href="/show_users">User List</a></li>
+								<li><a href="/search">Search Vents</a></li>
+								<li><a href="/about">About</a></li>
+							</ul>
+						</div>
+					</div>
+			</div>
+			<!-- End of Nav Bar -->
+		<!-- End of header -->
+		</div>
+
+		<!-- black text -->
+		<div class = 'blackify'>
+		<!-- Left side column -->
+		<div class = "col-md-6">
+
+	<!--  Newest Vents -->
+	<h3>Newest Vents for {{session['date']}}</h3>
+			{% if session['vents'] %}
+				{% for item in session['vents'] %}
+					<p>{{item['story']}}</p>
+					<p><a href="/profile/{{item['user_name']}}">{{item['user_name']}}</a></p>
+					<p>Was their day better than or worse than yours? 	<form method = "post" action = "/vote">
+						Better Than {{item['thumbs_up']}} <input type = "radio" name = "vote" value = "better">
+						Worse Than {{item['thumbs_down']}} <input type = "radio" name = "vote" value = "worse">
+						<input type = "hidden" value = {{item['id']}} name = "vent">
+						<input type = "hidden" value = {{item['user_name']}} name = "user">
+						<input type = "submit" value = "Vote">
+						</form> 
+					</p>
+					<!-- Allows user to add a Vent to their favorites -->
+					<p>
+						<form action = "/favorite" method = 'post'>
+							<input type = "hidden" name = 'vent' value = {{item['id']}}>
+							<input type = "submit" value = 'Add To Favorites'>
+						</form>
+					</p>
+					<hr>
+				{% endfor %}
+			{% endif %}
+		<!-- Ends left side columns  -->
+		</div>
+		<!-- Right side columns -->
+		<div class = "col-md-6">
+				<div class = "message-view">
+			<!-- Displays error message if voting or posting fails -->
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+						<p>{{message}}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+				<!-- Write Vent, only appears if user is logged in -->
+		{% if session['name'] %}
+			<h3>Write a Vent</h3>
+				<h4>Vents must be less than 200 charcters.</h4>
+				<form action = "/publish" method = "post">
+					What happened today? <input type = "text" name = "vent">
+					<input type = "submit" value = "Post">
+				</form>
+		{% endif %}
+
+	<!-- 	If user is not logged in, display a message prompting them to log in -->
+
+		{% if not session['name'] %}
+			<h3>Want to add your own Vent? Please log in!</h3>
+		{% endif %}	
+		<hr>
+
+		<!-- Displays most recent winner -->
+		{% for item in session['winner'] %}
+			<h3>Winner for {{item['created_at'].strftime('%Y-%m-%d')}} </h3>
+				<p>{{item['story']}}</p>
+				<p><a href="/profile/{{item['user_name']}}">{{item['user_name']}}</a></p>
+					Better Than {{item['thumbs_up']}}
+					Worse Than {{item['thumbs_down']}}
+					</form> 
+				</p>
+				<!-- Allows user to add a Vent to their favorites -->
+				<p>
+					<form action = "/favorite" method = 'post'>
+						<input type = "hidden" name = 'vent' value = {{item['id']}}>
+						<input type = "submit" value = 'Add To Favorites'>
+					</form>
+				</p>
+			{% endfor %}
+		<!-- Ends right side column -->
+		</div>
+	<!-- ends black text transformation -->
+	</div>
+	<!-- container -->
+	</div>
+<!-- background -->
+</div>
+</body>
+</html>

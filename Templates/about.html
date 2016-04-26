@@ -1,0 +1,77 @@
+<html>
+<head>
+	<title>Bad_Day</title>
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js"></script>
+</head>
+<body>
+	<!-- container div -->
+<div class = 'background'>
+	<div class = 'container'>
+
+		<!-- header -->
+		<div class = "page-header">
+			<div class = "row">
+				<div class = "col-md-3" >
+					<div class = 'logo'><a href="/">Bad_Day</a></div>
+				</div>
+				<div class = "right-head" class = "col-md-9">
+			{% if session['name'] %}	
+					<!-- Logout -->
+					<form action = "/logout">
+						Welcome, {{session['name']}}!
+						<button type = "submit">Logout</button>
+					</form>
+				{% else %}
+			<!-- Login/Register -->
+				<form action = "/login" method = "post">
+					<input placeholder = "E-mail" class = "input" name = 'email' type = 'text'>
+					<input placeholder = "Password" class = "input" name = 'password' type = 'password'>
+					<input type = 'submit' value = 'Log In'>
+				</form>
+				<p>Not a member yet? Join us <a href="/registration">here!</a></p>		
+			{% endif %}		
+				</div>
+			</div>
+			<!-- Nav Bar  -->
+			<div>
+				<nav class = "navbar navbar-default">
+					<div class = "container-fluid">
+						<div class = "navbar-header">
+							<ul class = "nav navbar-nav">
+								<li><a href="/">Home</a></li>
+								<li><a href="/view">Today's Vents</a></li>
+								<li><a href="/show_users">User List</a></li>
+								<li><a href="/search">Search Vents</a></li>
+								<li><a href="/about">About</a></li>
+							</ul>
+						</div>
+					</div>
+			</div>
+			<!-- End of Nav Bar -->
+		<!-- End of header -->
+		</div>
+		</div>
+<div class = 'blackify'>
+		<div class = 'about'>
+			<h1>What is this website about?</h1>
+
+			<p>Sometimes, you have a bad day, but you don't have anybody you can, or want to, tell about it. That's where we come in.</p>
+
+			<p>At Bad_Day, you can vent anonymously and read the vents of other people. If you think somebody had a worse day than you, you can hit the thumbs down button. If you think your day was worse, you can hit the thumbs up. Each day, a worst day is crowned.</p>
+
+			<p>Of course, we have no way of vetting these stories. However, if you want to amuse yourself by lying to strangers for false sympathy, you should go elsewhere.</p>
+		</div>
+</div>
+
+<!-- End Container -->
+</div>
+<!-- End Background -->
+</div>
+</body>
+</html>

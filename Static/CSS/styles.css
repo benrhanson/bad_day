@@ -1,0 +1,94 @@
+/* Shared and index page*/
+.carousel_pic{
+	border: white 1px solid;
+}
+
+.container{
+	color: white;
+}
+
+/*converts text to black color in sections where everything else is white*/
+.blackify{
+	color: black;
+}
+
+.carousel-inner > .item > img {
+    margin: 0 auto;
+}
+
+
+.background{
+	background-color: lightblue;
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+}
+
+.messages{
+	text-align: center;
+	color: white;
+}
+
+.page-header{
+
+	background-color: lightblue;
+	font-weight: bold;
+}
+
+.right-head{
+	text-align: center;
+	color: white;
+}
+
+.left-head{
+	font-weight: bold;
+}
+
+form{
+	color: black;
+}
+
+h1{
+	color: white;
+	text-align: center;
+}
+
+.input{
+	color: black;
+}
+
+.logo a{
+	font-size: 300%;
+	font-family: impact;
+	text-align: center;
+	color: white;
+	text-decoration: none;
+}
+
+.jumbo-style{
+	background-color: lightblue;
+}
+
+/*Specific to registration page*/
+.register, input{
+	display: inline-block;
+}
+
+.lemons{
+	color: white;
+}
+
+.lemons input{
+	color: black;
+}
+
+/* Specific to view.html */
+
+.message-view{
+	text-align: center;
+}
+
+/* specific to about page */
+.about{
+	padding: 0% 20% 0% 20%;
+}
