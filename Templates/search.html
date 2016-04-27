@@ -118,7 +118,7 @@
 		</div>
 		<!-- Right side columns -->
 		<div class = "col-md-6">
-			{% if session['search'] != "Please enter a search parameter." and session['search'] != "fail" %}
+			{% if session['search'] != "Please enter a search parameter." and session['search'] != "fail" and session['search'] != "Fresh" %}
 				{% for item in session['search'] %}
 					<p>{{item['story']}}</p>
 					<p><a href="/profile/{{item['user_name']}}">{{item['user_name']}}</a> | {{item['created_at'].strftime('%Y-%m-%d')}}</p>
@@ -129,6 +129,8 @@
 				<h3>{{ session['search'] }}</h3>
 			{% elif session['search'] == "fail" %}
 				<h3>Sorry, that search didn't return any results.</h3>
+			{% elif session['search'] == "Fresh" %}
+				<h3>Your searches will show up here!</h3>
 			{% else %}
 				<h3>Your searches will show up here!</h3>
  			{% endif %}

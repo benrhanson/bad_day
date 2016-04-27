@@ -24,7 +24,7 @@ def index():
 		session.pop['profile']
 	except: 
 		# Harmless variable assignment to complete the try/except statement. Couldn't do an if statement because if the session profile didn't exist, it would crash the program
-		session['date'] = 0
+		pass
 	# Note: Set it so that it's consistent across time zones later
 	# sets variables for today and yesterday
 	date = str(datetime.date.today())
@@ -34,7 +34,7 @@ def index():
 	# Data for the carousel.
 	session['carousel'] = mysql.fetch("SELECT stories.story, stories.thumbs_up, stories.id, stories.thumbs_down, users.user_name FROM stories LEFT JOIN users ON stories.user_id = users.id order by stories.updated_at DESC LIMIT 3")
 	# Determines if the daily winner has been found for yesterday yet
-	yesterday_winner = mysql.fetch("SELECT days_have_winners.story_id, stories.story FROM days_have_winners  LEFT JOIN stories ON stories.id = days_have_winners.story_id WHERE stories.created_at = '{}'".format(yesterday))
+	yesterday_winner = mysql.fetch("SELECT days_have_winners.story_id, stories.story FROM days_have_winners LEFT JOIN stories ON stories.id = days_have_winners.story_id WHERE stories.created_at = '{}'".format(yesterday))
 	if not yesterday_winner:
 		yesterday_contestants = mysql.fetch("SELECT id, user_id, thumbs_up FROM stories WHERE created_at = '{}'".format(yesterday))
 		print yesterday_contestants
@@ -96,7 +96,7 @@ def view():
 	# Data for the Vents
 	session['vents'] = mysql.fetch("SELECT stories.story, stories.thumbs_up, stories.id, stories.thumbs_down, users.user_name FROM stories LEFT JOIN users ON stories.user_id = users.id WHERE stories.created_at = '{}' order by stories.updated_at".format(date))	
 	# Displays most recent winner 
-	session['winner'] = mysql.fetch("SELECT stories.story, stories.created_at, stories.thumbs_up, stories.thumbs_down, users.user_name FROM days_have_winners LEFT JOIN stories ON stories.id = days_have_winners.story_id LEFT JOIN users ON users.id = stories.user_id ORDER BY days_have_winners.updated_at LIMIT 1")
+	session['winner'] = mysql.fetch("SELECT stories.story, stories.created_at, stories.thumbs_up, stories.thumbs_down, users.user_name FROM days_have_winners LEFT JOIN stories ON stories.id = days_have_winners.story_id LEFT JOIN users ON users.id = stories.user_id ORDER BY days_have_winners.updated_at desc LIMIT 1")
 	print session['winner']
 	return render_template('view.html')
 
@@ -312,6 +312,20 @@ def show_users():
 # Opens page that lets the user search through Vents
 @app.route('/search')
 def search_home():
+
+	# Clears old search results if the page is refreshed or the user navigates back later
+	try: 
+		session['search_happened'] == True
+
+	except:
+		session['search_happened'] == False
+
+	if session['search_happened'] == False:
+		session['search'] = "Fresh"
+
+	else: 
+		session['search_happened'] = False
+
 	# brings in user names for the form
 	session['possible_users'] = mysql.fetch("SELECT user_name FROM users ORDER BY user_name")
 	# brings in dates that have posts on them
@@ -331,6 +345,7 @@ def search_home():
 		winners.append(item['created_at'])
 
 	session['winner-dates'] = winners
+
 	return render_template('/search.html')
 
 # Runs user's queries for vents on Search page
@@ -343,9 +358,10 @@ def search_params():
 	# runs the search if there is enough data to run it
 	# keyword, no user or date
 	if len(keyword) > 2 and len(user) == 0 and len(date) == 9:
+		print "popcorn"
 		session['search'] = mysql.fetch("SELECT stories.story, stories.thumbs_up, stories.id, stories.thumbs_down, users.user_name, stories.created_at FROM stories LEFT JOIN users ON stories.user_id = users.id WHERE stories.story LIKE '{}' ORDER BY stories.updated_at desc".format(keyword))
 	# no user, date or keyword
-	if len(keyword) == 2 and len(user) == 0 and len(date) == 9:
+	elif len(keyword) == 2 and len(user) == 0 and len(date) == 9:
 		session['search'] = "Please enter a search parameter."
 	# user, no date, optional keyword
 	elif len(date) == 9 and len(user) > 0:
@@ -361,6 +377,9 @@ def search_params():
 	if len(session['search']) == 0:
 		session['search'] = "fail"
 
+	# helps page tell difference between a refresh and a new search
+	session['search_happened'] = True
+
 	return redirect('/search')
 
 # pulls up the desired Winner
@@ -370,7 +389,8 @@ def search_winners():
 	# stores the requested date
 	date = request.form['date']
 	session['search'] = mysql.fetch("SELECT stories.updated_at, stories.story, stories.thumbs_up, users.user_name, days_have_winners.story_id, days_have_winners.user_id, stories.thumbs_down, stories.created_at FROM stories LEFT JOIN users ON stories.user_id = users.id LEFT JOIN days_have_winners ON stories.user_id = days_have_winners.user_id WHERE stories.created_at = '{}' AND days_have_winners.story_id = stories.id ORDER BY stories.updated_at".format(date))
-	print session['search']
+	# helps page tell difference between a refresh and a new search
+	session['search_happened'] = True
 	return redirect('/search')
 
 # Users can send consolations to other users in the form of a form e-mail
