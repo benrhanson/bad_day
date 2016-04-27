@@ -318,7 +318,7 @@ def search_home():
 		session['search_happened'] == True
 
 	except:
-		session['search_happened'] == False
+		session['search_happened'] = False
 
 	if session['search_happened'] == False:
 		session['search'] = "Fresh"
