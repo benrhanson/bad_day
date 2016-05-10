@@ -37,7 +37,6 @@ def index():
 	yesterday_winner = mysql.fetch("SELECT days_have_winners.story_id, stories.story FROM days_have_winners LEFT JOIN stories ON stories.id = days_have_winners.story_id WHERE stories.created_at = '{}'".format(yesterday))
 	if not yesterday_winner:
 		yesterday_contestants = mysql.fetch("SELECT id, user_id, thumbs_up FROM stories WHERE created_at = '{}'".format(yesterday))
-		print yesterday_contestants
 		# avoids errors if there were no posts yesterday
 		if yesterday_contestants:
 			# determines the winner
@@ -97,7 +96,6 @@ def view():
 	session['vents'] = mysql.fetch("SELECT stories.story, stories.thumbs_up, stories.id, stories.thumbs_down, users.user_name FROM stories LEFT JOIN users ON stories.user_id = users.id WHERE stories.created_at = '{}' order by stories.updated_at".format(date))	
 	# Displays most recent winner 
 	session['winner'] = mysql.fetch("SELECT stories.story, stories.created_at, stories.thumbs_up, stories.thumbs_down, users.user_name FROM days_have_winners LEFT JOIN stories ON stories.id = days_have_winners.story_id LEFT JOIN users ON users.id = stories.user_id ORDER BY days_have_winners.updated_at desc LIMIT 1")
-	print session['winner']
 	return render_template('view.html')
 
 # opens the About page
@@ -358,7 +356,6 @@ def search_params():
 	# runs the search if there is enough data to run it
 	# keyword, no user or date
 	if len(keyword) > 2 and len(user) == 0 and len(date) == 9:
-		print "popcorn"
 		session['search'] = mysql.fetch("SELECT stories.story, stories.thumbs_up, stories.id, stories.thumbs_down, users.user_name, stories.created_at FROM stories LEFT JOIN users ON stories.user_id = users.id WHERE stories.story LIKE '{}' ORDER BY stories.updated_at desc".format(keyword))
 	# no user, date or keyword
 	elif len(keyword) == 2 and len(user) == 0 and len(date) == 9:
@@ -385,34 +382,11 @@ def search_params():
 # pulls up the desired Winner
 @app.route('/search_winners', methods = ["POST"])
 def search_winners():
-	print request.form['date']
 	# stores the requested date
 	date = request.form['date']
 	session['search'] = mysql.fetch("SELECT stories.updated_at, stories.story, stories.thumbs_up, users.user_name, days_have_winners.story_id, days_have_winners.user_id, stories.thumbs_down, stories.created_at FROM stories LEFT JOIN users ON stories.user_id = users.id LEFT JOIN days_have_winners ON stories.user_id = days_have_winners.user_id WHERE stories.created_at = '{}' AND days_have_winners.story_id = stories.id ORDER BY stories.updated_at".format(date))
 	# helps page tell difference between a refresh and a new search
 	session['search_happened'] = True
 	return redirect('/search')
-
-# Users can send consolations to other users in the form of a form e-mail
-# @app.route('/console/<name>')
-# def console(name):
-# 	# Creates Subject, To and From in the e-mail
-# 	# establishes the message variable
-# 	message = MIMEMultipart()
-# 	# Subject line
-# 	message['Subject'] = 'You got a condolence from ' + session['name'] + " on Bad_Day"
-# 	# Sender
-# 	message['From'] = 'benrhanson@live.com'
-# 	# Reciever
-# 	message['To'] = 'lowryos@yahoo.com' 
-# 	# establishes through which service its sent
-# 	s = smtplib.SMTP('localhost')
-# 	s.sendmail(message['From'], message['To'], message.as_string())
-# 	s.quit()
-
-
-# 	print 'consoled'
-# 	consoled = name
-# 	return redirect('/profile/'+ consoled)
 	
 app.run(debug = True)
