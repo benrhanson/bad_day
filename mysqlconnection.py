@@ -21,7 +21,7 @@ class MySQLConnection(object):
             'database': db,
             'host': 'localhost',
             # comment out the line below for windows
-            'unix_socket': ' bad-day.cbdbnd5joqwh.us-west-2.rds.amazonaws.com:3306',
+            'unix_socket': 'bad-day.cbdbnd5joqwh.us-west-2.rds.amazonaws.com:3306',
         }
         self.conn = mysql.connector.connect(**self.config)
     """ BELOW ARE THE CUSTOM FUNCTIONS WE BUILT FOR YOU TO USE """
