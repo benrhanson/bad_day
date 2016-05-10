@@ -16,12 +16,12 @@ class MySQLConnection(object):
     def __init__(self, db):
         """ BEGIN DATABASE CONFIGURATIONS """
         self.config = {
-            'user': 'root',
-            'password': 'root', # Change this for windows users
-            'database': db,
+            'user': 'benrhanson',
+            'password': 'stinger01', # Change this for windows users
+            'database': bad_day,
             'host': 'localhost',
             # comment out the line below for windows
-            'unix_socket': '/Applications/MAMP/tmp/mysql/mysql.sock',
+            'unix_socket': ' bad-day.cbdbnd5joqwh.us-west-2.rds.amazonaws.com:3306',
         }
         self.conn = mysql.connector.connect(**self.config)
     """ BELOW ARE THE CUSTOM FUNCTIONS WE BUILT FOR YOU TO USE """
