@@ -18,7 +18,7 @@ class MySQLConnection(object):
         self.config = {
             'user': 'benrhanson',
             'password': 'stinger01', # Change this for windows users
-            'database': bad_day,
+            'database': db,
             'host': 'localhost',
             # comment out the line below for windows
             'unix_socket': ' bad-day.cbdbnd5joqwh.us-west-2.rds.amazonaws.com:3306',
