@@ -1,25 +1,12 @@
--- MySQL Workbench Forward Engineering
+
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema bad_day
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema bad_day
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `bad_day` DEFAULT CHARACTER SET utf8 ;
 USE `bad_day` ;
 
--- -----------------------------------------------------
--- Table `bad_day`.`users`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bad_day`.`users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_name` VARCHAR(255) NULL DEFAULT NULL,
@@ -33,9 +20,6 @@ AUTO_INCREMENT = 26
 DEFAULT CHARACTER SET = utf8;
 
 
--- -----------------------------------------------------
--- Table `bad_day`.`stories`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bad_day`.`stories` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `story` VARCHAR(200) NULL DEFAULT NULL,
@@ -56,9 +40,6 @@ AUTO_INCREMENT = 37
 DEFAULT CHARACTER SET = utf8;
 
 
--- -----------------------------------------------------
--- Table `bad_day`.`days_have_winners`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bad_day`.`days_have_winners` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `story_id` INT(11) NOT NULL,
@@ -83,9 +64,6 @@ AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
--- -----------------------------------------------------
--- Table `bad_day`.`users_have_favorites`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bad_day`.`users_have_favorites` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
@@ -109,10 +87,6 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 18
 DEFAULT CHARACTER SET = utf8;
 
-
--- -----------------------------------------------------
--- Table `bad_day`.`users_have_votes`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bad_day`.`users_have_votes` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
